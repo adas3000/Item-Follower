@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -13,7 +11,6 @@ import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pl.allegro.follower.component.DaggerItemPropertiesComponent
-import pl.allegro.follower.model.data.CompareItems
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.util.textToFloat
 import java.lang.NumberFormatException
@@ -50,32 +47,31 @@ class MainActivityViewModel : ViewModel() {
 
     fun checkItemsHasChanged(allegroItems:List<Item>){
 
-        val compareList:MutableList<CompareItems> = mutableListOf()
-        
         Observable
             .fromIterable(allegroItems)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map {
-                return@map CompareItems(Jsoup.connect(it.itemURL.toString()).get(),it)
+            .filter{
+                compareItems(Jsoup.connect(it.itemURL.toString()).get(),it)
             }
-            .subscribe(object: Observer<CompareItems> {
+            .subscribe(object:Observer<Item>{
                 override fun onComplete() {
-
+                    Log.d(TAG,"On Complete invoked")
                 }
 
                 override fun onSubscribe(d: Disposable) {
 
                 }
 
-                override fun onNext(t: CompareItems) {
-                    compareList.add(t)
+                override fun onNext(t: Item) {
+                    liveDataItem.value = t
                 }
 
                 override fun onError(e: Throwable) {
                     Log.d(TAG,e.message.toString())
                 }
             })
+
     }
 
     private fun compareItems(document: Document,item:Item):Boolean{
