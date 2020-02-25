@@ -10,6 +10,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pl.allegro.follower.DI.service.AllegroService
 import pl.allegro.follower.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.util.textToFloat
@@ -28,17 +29,8 @@ class MainActivityViewModel : ViewModel() {
     val liveDataItem:MutableLiveData<Item> = MutableLiveData()
 
     @Inject
-    @Named("title")
-    lateinit var titlePath: String
-    @Inject
-    @Named("price")
-    lateinit var pricePath: String
-    @Named("img")
-    @Inject
-    lateinit var imgPath: String
-    @Named("expiredIn")
-    @Inject
-    lateinit var expiredInPath: String
+    lateinit var allegroService:AllegroService
+
 
     init {
         DaggerItemPropertiesComponent.builder().build().inject(this)
@@ -52,7 +44,9 @@ class MainActivityViewModel : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .filter{
-                compareItems(Jsoup.connect(it.itemURL.toString()).get(),it)
+                val itemChanged = compareItems(Jsoup.connect(it.itemURL.toString()).get(),it)
+                if(itemChanged){} //update
+                itemChanged
             }
             .subscribe(object:Observer<Item>{
                 override fun onComplete() {
@@ -79,19 +73,18 @@ class MainActivityViewModel : ViewModel() {
         val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.US)
 
 
-        val docPrice: String = document.selectFirst(pricePath).text()
+        val docPrice: String = document.selectFirst(allegroService.pricePath).text()
 
         var expiredIn: String? = ""
 
-        if (document.selectFirst(expiredIn) != null)
-            expiredIn = document.selectFirst(expiredIn).text()
+        if (document.selectFirst(allegroService.expiredInPath) != null)
+            expiredIn = document.selectFirst(allegroService.expiredInPath).text()
 
         try {
             val floatPrice: Float = textToFloat(docPrice)
 
             item.expiredIn = expiredIn
             item.lastUpdate = dateFormatter.format(Date())
-            item.itemPrice = floatPrice
 
             //update item
 

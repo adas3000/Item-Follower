@@ -54,6 +54,7 @@ dependencies {
     kapt 'com.google.dagger:dagger-android-processor:2.26'
     kapt 'com.google.dagger:dagger-compiler:2.26'
 
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

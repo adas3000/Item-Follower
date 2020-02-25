@@ -2,6 +2,7 @@ package pl.allegro.follower.DI.module
 
 import dagger.Module
 import dagger.Provides
+import pl.allegro.follower.DI.service.AllegroService
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -40,6 +41,11 @@ class ItemPropertiesModule {
     @Singleton
     fun provideExpiredIn():String{
         return expiredInPath
+    }
+
+    @Provides
+    fun provideAllegroService():AllegroService{
+        return AllegroService(titlePath,pricePath,imgPath,expiredInPath)
     }
 
 }
