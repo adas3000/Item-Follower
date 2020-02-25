@@ -10,15 +10,15 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.DI.service.AllegroService
-import pl.allegro.follower.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.util.textToFloat
 import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class MainActivityViewModel : ViewModel() {
 
@@ -38,7 +38,6 @@ class MainActivityViewModel : ViewModel() {
 
 
     fun checkItemsHasChanged(allegroItems:List<Item>){
-
         Observable
             .fromIterable(allegroItems)
             .subscribeOn(Schedulers.io())
@@ -48,6 +47,7 @@ class MainActivityViewModel : ViewModel() {
                 if(itemChanged){} //update
                 itemChanged
             }
+            .delay(1,TimeUnit.SECONDS)
             .subscribe(object:Observer<Item>{
                 override fun onComplete() {
                     Log.d(TAG,"On Complete invoked")
@@ -85,8 +85,6 @@ class MainActivityViewModel : ViewModel() {
 
             item.expiredIn = expiredIn
             item.lastUpdate = dateFormatter.format(Date())
-
-            //update item
 
             return if (floatPrice != item.itemPrice) {
                 item.itemPrice = floatPrice

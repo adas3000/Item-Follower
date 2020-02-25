@@ -5,19 +5,37 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.allegro.follower.R
+import pl.allegro.follower.model.data.Item
+import pl.allegro.follower.view.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var viewModel:MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+
+        viewModel.liveDataItem.observe(this,Observer<Item>{
+            sendNotificationToUser(it)
+            updateUI(it)
+            //notify user,update ui
+        })
+
         fab_add.setOnClickListener{
             startActivity(Intent(this,
                 AddItemActivity::class.java))
         }
+
+    }
+
+    private fun updateUI(it: Item) {
 
     }
 
@@ -29,5 +47,10 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main_menu,menu)
         return true
     }
+
+    fun sendNotificationToUser(it:Item){
+
+    }
+
 
 }
