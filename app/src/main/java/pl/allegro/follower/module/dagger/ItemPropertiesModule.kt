@@ -3,6 +3,7 @@ package pl.allegro.follower.module.dagger
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 class ItemPropertiesModule {
@@ -15,24 +16,28 @@ class ItemPropertiesModule {
 
     @Provides
     @Named("title")
+    @Singleton
     fun provideTitlePath():String{
         return titlePath
     }
 
     @Provides
     @Named("div")
+    @Singleton
     fun provideItemDivPath():String{
         return divPath
     }
 
     @Provides
     @Named("img")
+    @Singleton
     fun provideItemImg():String{
         return imgPath
     }
 
     @Provides
     @Named("expiredIn")
+    @Singleton
     fun provideExpiredIn():String{
         return expiredInPath
     }
