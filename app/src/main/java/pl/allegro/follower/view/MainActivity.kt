@@ -1,7 +1,8 @@
-package pl.allegro.follower
+package pl.allegro.follower.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import pl.allegro.follower.R
 
 class MainActivity : AppCompatActivity() {
 
