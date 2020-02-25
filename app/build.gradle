@@ -64,7 +64,8 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$archLifecycleVersion"
     kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"
 
-
+    //coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0"
 
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation 'junit:junit:4.12'

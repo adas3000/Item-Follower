@@ -10,7 +10,7 @@ interface ItemDao {
     @Query("select * from item")
     fun getAll():LiveData<List<Item>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item:Item)
 
     @Update

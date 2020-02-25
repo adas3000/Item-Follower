@@ -10,6 +10,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
@@ -25,17 +26,17 @@ import javax.inject.Inject
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    companion object{
-        const val TAG="MainActivityViewModel"
+    companion object {
+        const val TAG = "MainActivityViewModel"
     }
 
-    val liveDataItem:MutableLiveData<Item> = MutableLiveData()
-    val itemListLiveData:LiveData<List<Item>>
+    val liveDataItem: MutableLiveData<Item> = MutableLiveData()
+    val itemListLiveData: LiveData<List<Item>>
 
     @Inject
-    lateinit var allegroService:AllegroService
+    lateinit var allegroService: AllegroService
 
-    private val itemRepository:ItemRepository
+    private val itemRepository: ItemRepository
 
     init {
         DaggerItemPropertiesComponent.builder().build().inject(this)
@@ -44,34 +45,34 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
 
-    suspend fun insertItem(item: Item){
-        itemRepository.insertItem(item)
+    fun insertItem(item: Item) {
+
     }
 
-    suspend fun updateItem(item: Item){
-        itemRepository.updateItem(item)
+    fun updateItem(item: Item) {
+
     }
 
-    suspend fun deleteAll(){
-        itemRepository.deleteAllItems()
+    fun deleteAll() {
     }
 
 
-
-    fun checkItemsHasChanged(allegroItems:List<Item>){
+    fun checkItemsHasChanged(allegroItems: List<Item>) {
         Observable
             .fromIterable(allegroItems)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .filter{
-                val itemChanged = compareItems(Jsoup.connect(it.itemURL.toString()).get(),it)
-                if(itemChanged){} //update
+            .filter {
+                val itemChanged = compareItems(Jsoup.connect(it.itemURL.toString()).get(), it)
+                if (itemChanged) {
+                    updateItem(it)
+                } //update
                 itemChanged
             }
-            .delay(1,TimeUnit.SECONDS)
-            .subscribe(object:Observer<Item>{
+            .delay(1, TimeUnit.SECONDS)
+            .subscribe(object : Observer<Item> {
                 override fun onComplete() {
-                    Log.d(TAG,"On Complete invoked")
+                    Log.d(TAG, "On Complete invoked")
                 }
 
                 override fun onSubscribe(d: Disposable) {
@@ -83,13 +84,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.d(TAG,e.message.toString())
+                    Log.d(TAG, e.message.toString())
                 }
             })
 
     }
 
-    private fun compareItems(document: Document,item:Item):Boolean{
+    private fun compareItems(document: Document, item: Item): Boolean {
 
         val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.US)
 
@@ -101,26 +102,22 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         if (document.selectFirst(allegroService.expiredInPath) != null)
             expiredIn = document.selectFirst(allegroService.expiredInPath).text()
 
-        try {
+        return try {
             val floatPrice: Float = textToFloat(docPrice)
 
             item.expiredIn = expiredIn
             item.lastUpdate = dateFormatter.format(Date())
 
-            return if (floatPrice != item.itemPrice) {
+            if (floatPrice != item.itemPrice) {
                 item.itemPrice = floatPrice
                 true
             } else false
 
-        }
-        catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             e.fillInStackTrace()
-            return false
+            false
         }
     }
-
-
-
 
 
 }
