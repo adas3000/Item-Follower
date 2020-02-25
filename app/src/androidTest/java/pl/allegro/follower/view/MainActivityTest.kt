@@ -4,8 +4,8 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import org.junit.Assert.*
 import org.junit.Test
 import pl.allegro.follower.R
@@ -30,5 +30,15 @@ class MainActivityTest{
         activityScenario.close()
     }
 
+    @Test
+    fun test_menu_should_be_visible_and_not_check(){
+        val activityScenario= ActivityScenario.launch(MainActivity::class.java)
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().context)
+        onView(withId(R.id.menu_action_run_in_background)).check(matches(isDisplayed()))
+        onView(withId(R.id.menu_action_run_in_background)).check(matches(isNotChecked()))
+
+
+        activityScenario.close()
+    }
 
 }
