@@ -1,4 +1,4 @@
-package pl.allegro.follower.view
+package pl.allegro.follower.view.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

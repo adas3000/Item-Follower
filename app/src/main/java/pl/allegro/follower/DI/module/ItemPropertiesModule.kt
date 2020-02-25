@@ -1,4 +1,4 @@
-package pl.allegro.follower.module.dagger
+package pl.allegro.follower.DI.module
 
 import dagger.Module
 import dagger.Provides

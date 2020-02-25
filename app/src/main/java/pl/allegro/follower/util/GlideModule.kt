@@ -1,4 +1,4 @@
-package pl.allegro.follower.module.glide
+package pl.allegro.follower.util
 
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule

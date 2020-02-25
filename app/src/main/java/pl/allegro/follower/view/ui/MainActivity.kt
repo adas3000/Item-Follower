@@ -1,4 +1,4 @@
-package pl.allegro.follower.view
+package pl.allegro.follower.view.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +15,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         fab_add.setOnClickListener{
-            startActivity(Intent(this,AddItemActivity::class.java))
+            startActivity(Intent(this,
+                AddItemActivity::class.java))
         }
 
     }

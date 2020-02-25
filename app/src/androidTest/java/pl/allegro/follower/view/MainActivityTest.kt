@@ -6,9 +6,9 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import org.junit.Assert.*
 import org.junit.Test
 import pl.allegro.follower.R
+import pl.allegro.follower.view.ui.MainActivity
 
 class MainActivityTest{
 
@@ -16,7 +16,8 @@ class MainActivityTest{
     @Test
     fun test_should_show_add_activity() {
 
-        val activityScenario:ActivityScenario<MainActivity> = ActivityScenario.launch(MainActivity::class.java)
+        val activityScenario:ActivityScenario<MainActivity> = ActivityScenario.launch(
+            MainActivity::class.java)
 
         onView(withId(R.id.fab_add)).perform(click())
 
