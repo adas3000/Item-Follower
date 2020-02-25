@@ -21,7 +21,7 @@ class MainActivityTest{
         onView(withId(R.id.fab_add)).perform(click())
 
         closeSoftKeyboard()
-        
+
         onView(withId(R.id.editText_url)).check(matches(isDisplayed()))
         pressBack()
 

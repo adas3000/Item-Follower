@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Allegro Follower</string>
+    <string name="item_url_text" translatable="false">URL</string>
+    <string name="item_name_text">Item Name</string>
+    <string name="item_save_text">Save</string>
 </resources>
