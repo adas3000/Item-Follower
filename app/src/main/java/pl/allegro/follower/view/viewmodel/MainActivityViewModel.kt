@@ -1,8 +1,10 @@
 package pl.allegro.follower.view.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,6 +15,7 @@ import org.jsoup.nodes.Document
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.DI.service.AllegroService
 import pl.allegro.follower.model.data.Item
+import pl.allegro.follower.model.repository.ItemRepository
 import pl.allegro.follower.util.textToFloat
 import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
@@ -20,21 +23,39 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class MainActivityViewModel : ViewModel() {
+class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object{
         const val TAG="MainActivityViewModel"
     }
 
     val liveDataItem:MutableLiveData<Item> = MutableLiveData()
+    val itemListLiveData:LiveData<List<Item>>
 
     @Inject
     lateinit var allegroService:AllegroService
 
+    private val itemRepository:ItemRepository
 
     init {
         DaggerItemPropertiesComponent.builder().build().inject(this)
+        itemRepository = ItemRepository(application)
+        itemListLiveData = itemRepository.getAllItems()
     }
+
+
+    suspend fun insertItem(item: Item){
+        itemRepository.insertItem(item)
+    }
+
+    suspend fun updateItem(item: Item){
+        itemRepository.updateItem(item)
+    }
+
+    suspend fun deleteAll(){
+        itemRepository.deleteAllItems()
+    }
+
 
 
     fun checkItemsHasChanged(allegroItems:List<Item>){

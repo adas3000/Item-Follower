@@ -14,15 +14,16 @@ import pl.allegro.follower.view.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel:MainActivityViewModel
+    private lateinit var itemViewModel:MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
 
-        viewModel.liveDataItem.observe(this,Observer<Item>{
+        itemViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+
+        itemViewModel.liveDataItem.observe(this,Observer<Item>{
             sendNotificationToUser(it)
             updateUI(it)
             //notify user,update ui

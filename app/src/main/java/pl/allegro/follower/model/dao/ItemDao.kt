@@ -1,22 +1,24 @@
 package pl.allegro.follower.model.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
-import io.reactivex.Observable
 import pl.allegro.follower.model.data.Item
 
 @Dao
 interface ItemDao {
 
     @Query("select * from item")
-    fun getAll():Observable<List<Item>>
+    fun getAll():LiveData<List<Item>>
 
     @Insert
-    fun insert(item:Item)
+    suspend fun insert(item:Item)
 
     @Update
-    fun update(item:Item)
+    suspend fun update(item:Item)
 
     @Delete
-    fun delete(item:Item)
+    suspend fun delete(item:Item)
 
+    @Query("delete from item")
+    suspend fun deleteAll()
 }
