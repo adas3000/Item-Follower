@@ -35,9 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateUI(it: Item) {
 
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return super.onOptionsItemSelected(item)
@@ -48,9 +46,12 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun sendNotificationToUser(it:Item){
+    private fun sendNotificationToUser(it:Item){
 
     }
 
+    private fun updateUI(it: Item) {
+
+    }
 
 }
