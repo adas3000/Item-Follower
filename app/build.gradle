@@ -44,6 +44,7 @@ dependencies {
     //room
     def room_version = "2.2.4"
     implementation "androidx.room:room-runtime:$room_version"
+    implementation 'androidx.room:room-ktx:2.2.4'
     implementation "androidx.room:room-rxjava2:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
@@ -58,6 +59,8 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.26'
     kapt 'com.google.dagger:dagger-android-processor:2.26'
     kapt 'com.google.dagger:dagger-compiler:2.26'
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     //lifecycle
     def archLifecycleVersion="1.1.1"
