@@ -34,7 +34,8 @@ class AddItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
 
-//        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_red)
+//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         title = "Add Item"
 
          viewModel = ViewModelProviders.of(this).get(AddViewModel::class.java)
@@ -68,6 +69,10 @@ class AddItemActivity : AppCompatActivity() {
         return when(item.itemId){
             R.id.menu_action_save -> {
                 addItem()
+                true
+            }
+            android.R.id.home->{
+                if(!progressBar_add_item.isVisible) finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
