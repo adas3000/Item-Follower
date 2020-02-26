@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,7 +11,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.DI.service.AllegroService
 import pl.allegro.follower.model.data.Item
@@ -20,7 +18,6 @@ import pl.allegro.follower.util.textToFloat
 import pl.allegro.follower.view.ui.AddItemActivity.Companion.TAG
 import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -93,7 +90,7 @@ class AddViewModel : ViewModel(){
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.d(TAG,e.message.toString())
+                    Log.d(TAG,"On Error invoked ${e.message.toString()}")
                 }
 
                 override fun onNext(t: Item) {

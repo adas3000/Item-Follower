@@ -1,13 +1,18 @@
 package pl.allegro.follower.view.ui
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_add_item.*
 import pl.allegro.follower.R
 import pl.allegro.follower.model.data.Item
@@ -31,8 +36,17 @@ class AddItemActivity : AppCompatActivity() {
          editText_name.setText(viewModel.itemNameValue.value)
          editText_url.setText(viewModel.itemUrlValue.value)
 
-        viewModel.itemValue.observe(this,Observer<Item>{
+        editText_name.addTextChangedListener {
+            viewModel.setItemName(it.toString())
+        }
+        editText_url.addTextChangedListener {
+            viewModel.setItemUrl(it.toString())
+        }
 
+
+        viewModel.itemValue.observe(this,Observer<Item>{
+            val jsonItem :String= Gson().toJson(it)
+            setResult(Activity.RESULT_OK, Intent().apply { putExtra(ADD_ID,jsonItem) })
         })
 
     }
@@ -59,8 +73,8 @@ class AddItemActivity : AppCompatActivity() {
         val itemNameValue = viewModel.itemNameValue.value
         val itemUrlValue = viewModel.itemUrlValue.value
 
-        if(TextUtils.isEmpty(itemNameValue) || TextUtils.isEmpty(itemUrlValue)){
-            Toast.makeText(this,"Please fill all fields",Toast.LENGTH_SHORT).show()
+        if(TextUtils.isEmpty(itemUrlValue)){
+            Toast.makeText(this,"Please fill item url field",Toast.LENGTH_SHORT).show()
             return
         }
 
