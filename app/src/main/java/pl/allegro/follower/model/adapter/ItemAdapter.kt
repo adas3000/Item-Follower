@@ -36,20 +36,26 @@ class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        val itemName = itemList[position].itemName
+        val itemPrice = itemList[position].itemPrice
+        val itemExpiredIn = itemList[position].expiredIn
+        val itemLastUpdate = itemList[position].lastUpdate
+        val itemLogoURL = itemList[position].itemImgUrl
+
         Glide.with(holder.img.context)
-            .load(itemList[position].itemImgUrl)
+            .load(itemLogoURL)
             .into(holder.img)
 
         holder.img.setOnClickListener {
             //to url
         }
 
-        holder.itemName.text = itemList[position].itemName+"\n"+itemList[position].itemPrice
-        holder.itemLastUpdate.text =holder.itemLastUpdate.context.getString(R.string.last_update_date_text,itemList[position].lastUpdate)
+        holder.itemName.text = itemName+"\n"+itemPrice
+        holder.itemLastUpdate.text =holder.itemLastUpdate.context.getString(R.string.last_update_date_text,itemLastUpdate)
 
         if(itemList[position].expiredIn != null && !TextUtils.isEmpty(itemList[position].expiredIn)){
             holder.itemExpiredIn.visibility = View.VISIBLE
-            holder.itemExpiredIn.text = holder.itemExpiredIn.context.getString(R.string.expired_in_date_text,itemList[position].expiredIn)
+            holder.itemExpiredIn.text = holder.itemExpiredIn.context.getString(R.string.expired_in_date_text,itemExpiredIn)
         }
 
     }

@@ -81,8 +81,8 @@ class AddItemActivity : AppCompatActivity() {
         val itemNameValue = viewModel.itemNameValue.value
         val itemUrlValue = viewModel.itemUrlValue.value
 
-        if(TextUtils.isEmpty(itemUrlValue)){
-            Toast.makeText(this,"Please fill item url field",Toast.LENGTH_SHORT).show()
+        if(TextUtils.isEmpty(itemUrlValue) || TextUtils.isEmpty(itemNameValue)){
+            Toast.makeText(this,"Please fill all fields",Toast.LENGTH_SHORT).show()
             return
         }
 
