@@ -7,4 +7,6 @@
     <string name="default_item_title">Title</string>
     <string name="default_item_expired_in">Expired In</string>
     <string name="default_item_last_update_time">Date</string>
+    <string name="last_update_date_text">Update:%s</string>
+    <string name="expired_in_date_text">Expired in:%s</string>
 </resources>

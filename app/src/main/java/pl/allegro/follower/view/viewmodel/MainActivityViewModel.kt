@@ -10,6 +10,8 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -44,16 +46,37 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         itemListLiveData = itemRepository.getAllItems()
     }
 
+    fun addItemToList(item:Item){
+
+    }
 
     fun insertItem(item: Item) {
 
+        GlobalScope.launch {
+            itemRepository.insertItem(item)
+        }
     }
 
     fun updateItem(item: Item) {
 
+        GlobalScope.launch {
+            itemRepository.updateItem(item)
+        }
+
     }
 
     fun deleteAll() {
+        GlobalScope.launch {
+            itemRepository.deleteAllItems()
+        }
+    }
+
+    fun delete(item:Item){
+
+        GlobalScope.launch {
+            itemRepository.delete(item)
+        }
+
     }
 
 
@@ -92,7 +115,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     private fun compareItems(document: Document, item: Item): Boolean {
 
-        val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.US)
+        val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
 
 
         val docPrice: String = document.selectFirst(allegroService.pricePath).text()

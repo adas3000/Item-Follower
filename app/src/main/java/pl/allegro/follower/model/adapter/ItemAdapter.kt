@@ -1,6 +1,7 @@
 package pl.allegro.follower.model.adapter
 
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,10 @@ class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
     fun setItems(items:List<Item>){
         itemList = items
         notifyDataSetChanged()
+    }
+
+    fun getItemAtPosition(i:Int):Item{
+        return itemList[i]
     }
 
 
@@ -38,9 +43,14 @@ class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
         holder.img.setOnClickListener {
             //to url
         }
+
         holder.itemName.text = itemList[position].itemName+"\n"+itemList[position].itemPrice
-        holder.itemExpiredIn.text = itemList[position].expiredIn
-        holder.itemLastUpdate.text = itemList[position].lastUpdate
+        holder.itemLastUpdate.text =holder.itemLastUpdate.context.getString(R.string.last_update_date_text,itemList[position].lastUpdate)
+
+        if(itemList[position].expiredIn != null && !TextUtils.isEmpty(itemList[position].expiredIn)){
+            holder.itemExpiredIn.visibility = View.VISIBLE
+            holder.itemExpiredIn.text = holder.itemExpiredIn.context.getString(R.string.expired_in_date_text,itemList[position].expiredIn)
+        }
 
     }
 

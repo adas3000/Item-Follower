@@ -23,7 +23,8 @@ import pl.allegro.follower.view.viewmodel.AddViewModel
 class AddItemActivity : AppCompatActivity() {
 
     companion object{
-        const val ADD_ID = "Added_Item_Data"
+        const val ADD_ID = "Item_ADD"
+        const val UPDATE_ID = "Item_UPDATE"
         const val TAG = "AddItemActivity"
     }
 
@@ -32,6 +33,9 @@ class AddItemActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
+
+//        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_red)
+        title = "Add Item"
 
          viewModel = ViewModelProviders.of(this).get(AddViewModel::class.java)
 

@@ -82,10 +82,8 @@ class MainActivity : AppCompatActivity() {
                 val jsonItem = data?.extras?.getString(AddItemActivity.ADD_ID,"")
                 val item:Item = Gson().fromJson(jsonItem,Item::class.java)
                 itemViewModel.insertItem(item)
+
                 Toast.makeText(this,"Item added",Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(this,"Failure",Toast.LENGTH_SHORT).show()
             }
 
         }
