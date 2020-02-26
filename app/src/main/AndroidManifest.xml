@@ -26,8 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".util.broadcast.CheckItemsStateBroadcastReceiver"
-            android:enabled="true" />
+        <service android:name=".util.service.ItemStateService"
+            android:enabled="true"/>
+
     </application>
 
 </manifest>

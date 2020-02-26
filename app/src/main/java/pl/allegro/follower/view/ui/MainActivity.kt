@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pl.allegro.follower.R
 import pl.allegro.follower.model.adapter.ItemAdapter
 import pl.allegro.follower.model.data.Item
-import pl.allegro.follower.util.broadcast.CheckItemsStateBroadcastReceiver
+import pl.allegro.follower.util.service.ItemStateService
 import pl.allegro.follower.view.viewmodel.MainActivityViewModel
 
 
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val ADD_REQ = 7
+        const val ItemsStateReceiver_REQ=10
     }
 
 
@@ -38,23 +39,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val intent = Intent(this, CheckItemsStateBroadcastReceiver::class.java)
-        val alarmManager =
-            getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis(),
-            5000,
-            PendingIntent.getBroadcast(this, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        )
+        val intent = Intent(this, ItemStateService::class.java)
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+            PendingIntent.getBroadcast(this, ItemsStateReceiver_REQ, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+
 
         itemViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
 
-        itemViewModel.liveDataItem.observe(this, Observer<Item> {
-            sendNotificationToUser(it)
-            updateUI(it)
-            //notify user,update ui
-        })
 
         itemViewModel.itemListLiveData.observe(this, Observer<List<Item>> {
             adapter.setItems(it)
@@ -99,14 +91,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
-    }
-
-    private fun sendNotificationToUser(it: Item) {
-
-    }
-
-    private fun updateUI(it: Item) {
-
     }
 
 

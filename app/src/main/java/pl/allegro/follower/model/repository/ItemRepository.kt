@@ -2,6 +2,9 @@ package pl.allegro.follower.model.repository
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import io.reactivex.Observable
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import pl.allegro.follower.DI.component.DaggerAppComponent
 import pl.allegro.follower.DI.module.AppModule
 import pl.allegro.follower.model.dao.ItemDao
@@ -13,7 +16,7 @@ class ItemRepository(application: Application) {
     @Inject
     lateinit var itemDao: ItemDao
 
-    private var allItems:LiveData<List<Item>>
+    private var allItems: LiveData<List<Item>>
 
     init {
         DaggerAppComponent
@@ -25,25 +28,36 @@ class ItemRepository(application: Application) {
         allItems = itemDao.getAll()
     }
 
-    fun getAllItems():LiveData<List<Item>>{
+    fun getAllItems(): LiveData<List<Item>> {
         return allItems
     }
 
-
-    suspend fun updateItem(item: Item){
-        itemDao.update(item)
+    fun getObservableAllItems():Observable<List<Item>>{
+        return itemDao.getAllObservable()
     }
 
-    suspend fun insertItem(item:Item){
-        itemDao.insert(item)
+    fun updateItem(item: Item) {
+        GlobalScope.launch {
+            itemDao.update(item)
+        }
     }
 
-    suspend fun deleteAllItems(){
-        itemDao.deleteAll()
+    fun insertItem(item: Item) {
+        GlobalScope.launch {
+            itemDao.insert(item)
+        }
     }
 
-    suspend fun delete(item:Item){
-        itemDao.delete(item)
+    fun deleteAllItems() {
+        GlobalScope.launch {
+            itemDao.deleteAll()
+        }
+    }
+
+    fun delete(item: Item) {
+        GlobalScope.launch {
+            itemDao.delete(item)
+        }
     }
 
 }

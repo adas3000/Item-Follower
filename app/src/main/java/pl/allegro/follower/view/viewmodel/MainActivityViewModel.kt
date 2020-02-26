@@ -32,7 +32,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         const val TAG = "MainActivityViewModel"
     }
 
-    val liveDataItem: MutableLiveData<Item> = MutableLiveData()
     val itemListLiveData: LiveData<List<Item>>
 
     @Inject
@@ -46,100 +45,21 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         itemListLiveData = itemRepository.getAllItems()
     }
 
-    fun addItemToList(item:Item){
-
-    }
 
     fun insertItem(item: Item) {
-
-        GlobalScope.launch {
-            itemRepository.insertItem(item)
-        }
+        itemRepository.insertItem(item)
     }
 
     fun updateItem(item: Item) {
-
-        GlobalScope.launch {
-            itemRepository.updateItem(item)
-        }
-
+        itemRepository.updateItem(item)
     }
 
     fun deleteAll() {
-        GlobalScope.launch {
-            itemRepository.deleteAllItems()
-        }
+        itemRepository.deleteAllItems()
     }
 
-    fun delete(item:Item){
-
-        GlobalScope.launch {
-            itemRepository.delete(item)
-        }
-
-    }
-
-
-    fun checkItemsHasChanged(allegroItems: List<Item>) {
-        Observable
-            .fromIterable(allegroItems)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter {
-                val itemChanged = compareItems(Jsoup.connect(it.itemURL.toString()).get(), it)
-                if (itemChanged) {
-                    updateItem(it)
-                } //update
-                itemChanged
-            }
-            .delay(1, TimeUnit.SECONDS)
-            .subscribe(object : Observer<Item> {
-                override fun onComplete() {
-                    Log.d(TAG, "On Complete invoked")
-                }
-
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
-                override fun onNext(t: Item) {
-                    liveDataItem.value = t
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.d(TAG, e.message.toString())
-                }
-            })
-
-    }
-
-    private fun compareItems(document: Document, item: Item): Boolean {
-
-        val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
-
-
-        val docPrice: String = document.selectFirst(allegroService.pricePath).text()
-
-        var expiredIn: String? = ""
-
-        if (document.selectFirst(allegroService.expiredInPath) != null)
-            expiredIn = document.selectFirst(allegroService.expiredInPath).text()
-
-        return try {
-            val floatPrice: Float = textToFloat(docPrice)
-
-            item.expiredIn = expiredIn
-            item.lastUpdate = dateFormatter.format(Date())
-
-            if (floatPrice != item.itemPrice) {
-                item.itemPrice = floatPrice
-                true
-            } else false
-
-        } catch (e: NumberFormatException) {
-            e.fillInStackTrace()
-            false
-        }
+    fun delete(item: Item) {
+        itemRepository.delete(item)
     }
 
 
