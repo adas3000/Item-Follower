@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
@@ -47,6 +49,7 @@ class AddItemActivity : AppCompatActivity() {
         viewModel.itemValue.observe(this,Observer<Item>{
             val jsonItem :String= Gson().toJson(it)
             setResult(Activity.RESULT_OK, Intent().apply { putExtra(ADD_ID,jsonItem) })
+            finish()
         })
 
     }
@@ -69,6 +72,7 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     private fun addItem(){
+        progressBar_add_item.visibility = View.VISIBLE
 
         val itemNameValue = viewModel.itemNameValue.value
         val itemUrlValue = viewModel.itemUrlValue.value
@@ -86,5 +90,9 @@ class AddItemActivity : AppCompatActivity() {
         viewModel.onDestroy()
     }
 
+    override fun onBackPressed() {
+        if(progressBar_add_item.isVisible) return
+        super.onBackPressed()
+    }
 
 }

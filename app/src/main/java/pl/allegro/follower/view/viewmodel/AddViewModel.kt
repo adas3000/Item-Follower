@@ -62,7 +62,7 @@ class AddViewModel : ViewModel(){
                     val imgUrl: String = doc.selectFirst(allegroService.imgPath).absUrl("src")
 
                     var expiredIn: String? = ""
-                    if (allegroService.expiredInPath != null)
+                    if (doc.selectFirst(allegroService.expiredInPath) != null)
                         expiredIn = doc.selectFirst(allegroService.expiredInPath).text()
 
                     try {
