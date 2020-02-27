@@ -11,4 +11,5 @@
     <string name="expired_in_date_text">Expired in:%s</string>
     <string name="item_deleted_text">Item deleted</string>
     <string name="item_added_text">Item added</string>
+    <string name="shared_prefs_name_text" translatable="false">ItemFollowerSharedPreferences</string>
 </resources>

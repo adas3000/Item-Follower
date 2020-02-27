@@ -43,7 +43,7 @@ class ItemStateService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         itemRepository = ItemRepository(application)
-        
+
         itemRepository
             .getObservableAllItems()
             .subscribeOn(Schedulers.io())

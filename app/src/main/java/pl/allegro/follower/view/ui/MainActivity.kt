@@ -90,6 +90,11 @@ class MainActivity : AppCompatActivity() {
                     startItemStateService()
                     item.isChecked = true
                 }
+                itemViewModel.setBckgrdCheckEnabled(
+                    getSharedPreferences(getString(R.string.shared_prefs_name_text),Context.MODE_PRIVATE)
+                        .edit(),
+                    item.isChecked)
+
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -98,6 +103,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+        menu?.getItem(0)?.isChecked =
+            itemViewModel.getBckgrdCheckEnabled(getSharedPreferences(getString(R.string.shared_prefs_name_text),Context.MODE_PRIVATE))
+
         return true
     }
 

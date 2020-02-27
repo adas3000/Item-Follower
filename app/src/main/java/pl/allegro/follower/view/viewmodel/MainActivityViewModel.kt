@@ -1,6 +1,7 @@
 package pl.allegro.follower.view.viewmodel
 
 import android.app.Application
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -30,6 +31,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     companion object {
         const val TAG = "MainActivityViewModel"
+        const val BCKGRD_CHECK_ENABLED =  "background_check"
     }
 
     val itemListLiveData: LiveData<List<Item>>
@@ -56,6 +58,15 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     fun delete(item: Item) {
         itemRepository.delete(item)
     }
+
+    fun getBckgrdCheckEnabled(sharedPreferences: SharedPreferences):Boolean =
+        sharedPreferences.getBoolean(BCKGRD_CHECK_ENABLED,false)
+
+    fun setBckgrdCheckEnabled(editor: SharedPreferences.Editor,value:Boolean){
+        editor.putBoolean(BCKGRD_CHECK_ENABLED,value)
+        editor.apply()
+    }
+
 
 
 }
