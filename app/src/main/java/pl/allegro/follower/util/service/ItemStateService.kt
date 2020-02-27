@@ -7,6 +7,7 @@ import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
@@ -27,7 +28,9 @@ class ItemStateService : Service() {
 
     @Inject
     lateinit var allegroService:AllegroService
-    private val itemRepository: ItemRepository = ItemRepository(application)
+
+    private lateinit var itemRepository: ItemRepository
+    private val compositeDisposable = CompositeDisposable()
 
     init {
         DaggerItemPropertiesComponent.builder().build().inject(this)
@@ -35,8 +38,9 @@ class ItemStateService : Service() {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        itemRepository = ItemRepository(application)
         for(i in 0 until 1000)
-            println("ONSTART")
+            println("on start here")
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -64,7 +68,7 @@ class ItemStateService : Service() {
                 }
 
                 override fun onSubscribe(d: Disposable) {
-
+                    compositeDisposable.add(d)
                 }
 
                 override fun onNext(t: Item) {
@@ -103,6 +107,11 @@ class ItemStateService : Service() {
             e.fillInStackTrace()
             false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
 }

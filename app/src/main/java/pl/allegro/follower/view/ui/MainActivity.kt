@@ -28,23 +28,20 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val ADD_REQ = 7
-        const val ItemsStateReceiver_REQ=10
     }
 
 
     private lateinit var itemViewModel: MainActivityViewModel
     private val adapter = ItemAdapter()
 
+    private lateinit var itemStateServicePendingIntent: PendingIntent
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val intent = Intent(this, ItemStateService::class.java)
-        val pendingIntent :PendingIntent = PendingIntent.getService(this,0,intent,0)
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-            pendingIntent)
-
+        itemStateServicePendingIntent =
+            PendingIntent.getService(this, 0, Intent(this, ItemStateService::class.java), 0)
 
         itemViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
 
@@ -86,7 +83,21 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
+
+        return when (item.itemId) {
+            R.id.menu_action_run_in_background -> {
+                if (item.isChecked){
+                    stopItemStateServie()
+                    item.isChecked = false
+                }
+                else{
+                    startItemStateService()
+                    item.isChecked = true
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -107,10 +118,22 @@ class MainActivity : AppCompatActivity() {
 
                 Toast.makeText(this, getString(R.string.item_added_text), Toast.LENGTH_SHORT).show()
             }
-
         }
+    }
 
+    private fun startItemStateService() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis(),
+            AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+            itemStateServicePendingIntent
+        )
+    }
 
+    private fun stopItemStateServie() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(itemStateServicePendingIntent)
     }
 
 
