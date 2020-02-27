@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import pl.allegro.follower.R
 import pl.allegro.follower.model.data.Item
 
@@ -44,18 +45,21 @@ class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
         Glide.with(holder.img.context)
             .load(itemLogoURL)
+            .apply(RequestOptions.circleCropTransform())
             .into(holder.img)
 
         holder.img.setOnClickListener {
             //to url
         }
 
-        holder.itemName.text = itemName+"\n"+itemPrice
-        holder.itemLastUpdate.text =holder.itemLastUpdate.context.getString(R.string.last_update_date_text,itemLastUpdate)
+        holder.itemName.text = itemName
+        holder.itemPrice.text = holder.itemPrice.context.getString(R.string.price_in_pln_text,itemPrice.toString())
+        holder.itemLastUpdate.text =itemLastUpdate
 
-        if(itemList[position].expiredIn != null && !TextUtils.isEmpty(itemList[position].expiredIn)){
+        if(itemExpiredIn != null && !TextUtils.isEmpty(itemExpiredIn)){
             holder.itemExpiredIn.visibility = View.VISIBLE
-            holder.itemExpiredIn.text = holder.itemExpiredIn.context.getString(R.string.expired_in_date_text,itemExpiredIn)
+            holder.itemExpiredIn.text = itemExpiredIn
+            println(itemExpiredIn)
         }
 
     }
@@ -64,6 +68,7 @@ class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
         val img = view.findViewById<ImageView>(R.id.imageView_logo)
         val itemName = view.findViewById<TextView>(R.id.textView_item_name)
+        val itemPrice = view.findViewById<TextView>(R.id.textView_item_price)
         val itemExpiredIn = view.findViewById<TextView>(R.id.textView_item_expired_in)
         val itemLastUpdate = view.findViewById<TextView>(R.id.textView_item_last_update_time)
 

@@ -7,9 +7,8 @@
     <string name="default_item_title">Title</string>
     <string name="default_item_expired_in">Expired In</string>
     <string name="default_item_last_update_time">Date</string>
-    <string name="last_update_date_text">Update:%s</string>
-    <string name="expired_in_date_text">Expired in:%s</string>
     <string name="item_deleted_text">Item deleted</string>
     <string name="item_added_text">Item added</string>
+    <string name="price_in_pln_text">%s zł</string>
     <string name="shared_prefs_name_text" translatable="false">ItemFollowerSharedPreferences</string>
 </resources>
