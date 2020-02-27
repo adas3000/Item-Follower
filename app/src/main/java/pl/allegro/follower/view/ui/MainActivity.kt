@@ -40,9 +40,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val intent = Intent(this, ItemStateService::class.java)
+        val pendingIntent :PendingIntent = PendingIntent.getService(this,0,intent,0)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-            PendingIntent.getBroadcast(this, ItemsStateReceiver_REQ, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+            pendingIntent)
 
 
         itemViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)

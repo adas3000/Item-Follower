@@ -34,14 +34,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     val itemListLiveData: LiveData<List<Item>>
 
-    @Inject
-    lateinit var allegroService: AllegroService
-
-    private val itemRepository: ItemRepository
+    private val itemRepository: ItemRepository = ItemRepository(application)
 
     init {
-        DaggerItemPropertiesComponent.builder().build().inject(this)
-        itemRepository = ItemRepository(application)
         itemListLiveData = itemRepository.getAllItems()
     }
 
