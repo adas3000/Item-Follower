@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -54,7 +55,6 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(Intent(this, AddItemActivity::class.java), ADD_REQ)
         }
 
-
         recyclerView_item_list.setHasFixedSize(true)
         recyclerView_item_list.layoutManager = LinearLayoutManager(this)
         recyclerView_item_list.adapter = adapter
@@ -74,6 +74,12 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }).attachToRecyclerView(recyclerView_item_list)
+
+        pullToRefresh.setOnRefreshListener {
+            Handler().postDelayed({
+                pullToRefresh.isRefreshing=false
+            },1000)
+        }
 
     }
 
@@ -95,6 +101,10 @@ class MainActivity : AppCompatActivity() {
                         .edit(),
                     item.isChecked)
 
+                true
+            }
+            R.id.menu_action_delete_all->{
+                itemViewModel.deleteAll()
                 true
             }
             else -> super.onOptionsItemSelected(item)

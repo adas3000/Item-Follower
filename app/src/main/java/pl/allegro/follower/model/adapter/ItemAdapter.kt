@@ -45,7 +45,7 @@ class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
         Glide.with(holder.img.context)
             .load(itemLogoURL)
-            .apply(RequestOptions.circleCropTransform())
+//            .apply(RequestOptions.circleCropTransform())
             .into(holder.img)
 
         holder.img.setOnClickListener {

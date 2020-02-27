@@ -41,7 +41,7 @@ class DataTest {
         closeSoftKeyboard()
 
         onView(withId(R.id.menu_action_save)).perform(click())
-        Thread.sleep(500)
+        Thread.sleep(5000)
         }
     }
 }

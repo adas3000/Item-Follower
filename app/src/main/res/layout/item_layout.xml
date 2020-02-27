@@ -13,8 +13,8 @@
 
     <ImageView
         android:id="@+id/imageView_logo"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="16dp"
@@ -53,8 +53,7 @@
         app:layout_constraintTop_toBottomOf="@id/textView_item_price"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:lines="2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:visibility="gone"
         />
 
