@@ -55,17 +55,13 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         recyclerView_item_list.setHasFixedSize(true)
         recyclerView_item_list.layoutManager = LinearLayoutManager(this)
         recyclerView_item_list.adapter = adapter
 
         ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
-            ): Boolean {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return false
             }
 
@@ -87,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_action_run_in_background -> {
                 if (item.isChecked){
-                    stopItemStateServie()
+                    stopItemStateService()
                     item.isChecked = false
                 }
                 else{
@@ -131,7 +127,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun stopItemStateServie() {
+    private fun stopItemStateService() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(itemStateServicePendingIntent)
     }

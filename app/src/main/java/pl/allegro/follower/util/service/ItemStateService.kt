@@ -26,6 +26,10 @@ import javax.inject.Inject
 
 class ItemStateService : Service() {
 
+    companion object{
+        const val TAG="ItemStateService"
+    }
+
     @Inject
     lateinit var allegroService:AllegroService
 
@@ -39,8 +43,27 @@ class ItemStateService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         itemRepository = ItemRepository(application)
-        for(i in 0 until 1000)
-            println("on start here")
+        
+        itemRepository
+            .getObservableAllItems()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object:Observer<List<Item>>{
+                override fun onComplete() {
+                    Log.d(TAG,"On complete invoked")
+                }
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+                override fun onNext(t: List<Item>) {
+                    checkItemsHasChanged(t)
+                }
+                override fun onError(e: Throwable) {
+                    e.fillInStackTrace()
+                    Log.d(TAG,"On error invoked ${e.message.toString()}")
+                }
+            })
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -58,7 +81,7 @@ class ItemStateService : Service() {
                 val itemChanged = compareItems(Jsoup.connect(it.itemURL.toString()).get(), it)
                 if (itemChanged) {
                     itemRepository.updateItem(it)
-                } //update
+                }
                 itemChanged
             }
             .delay(1, TimeUnit.SECONDS)
@@ -72,6 +95,7 @@ class ItemStateService : Service() {
                 }
 
                 override fun onNext(t: Item) {
+                    //todo notify user
                 }
 
                 override fun onError(e: Throwable) {
