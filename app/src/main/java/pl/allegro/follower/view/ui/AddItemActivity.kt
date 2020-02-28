@@ -34,9 +34,9 @@ class AddItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_item)
 
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        title = "Add Item"
+        title = getString(R.string.add_activity_appbar_text)
 
          viewModel = ViewModelProviders.of(this).get(AddViewModel::class.java)
 

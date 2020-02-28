@@ -46,40 +46,21 @@ class AddViewModel : ViewModel(){
     }
 
     fun findItemData(url:String,name:String){
+        try {
+            findItem(url,name)
+        } catch (e: NumberFormatException) {
+            e.fillInStackTrace()
+            Log.d(TAG,"On error invoked:${e.message.toString()}")
+        }
+    }
+
+    private fun findItem(url:String,name:String){
 
         Observable
             .create(ObservableOnSubscribe<Item> { emitter ->
                 if(!emitter.isDisposed){
-
-                    val doc = Jsoup.connect(url).get()
-
-                    val title: String =
-                        if (name.isNotEmpty()) name
-                        else
-                            doc.selectFirst(allegroInfo.titlePath).text()
-
-                    val strPrice: String = doc.selectFirst(allegroInfo.pricePath).text()
-                    val imgUrl: String = doc.selectFirst(allegroInfo.imgPath).absUrl("src")
-
-                    var expiredIn: String? = ""
-                    if (doc.selectFirst(allegroInfo.expiredInPath) != null)
-                        expiredIn = doc.selectFirst(allegroInfo.expiredInPath).text()
-
-                    try {
-                        val floatPrice: Float = strPrice.strPriceToFloat()
-                        val item = Item(0,title,floatPrice,url)
-                        val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
-
-                        item.itemImgUrl = imgUrl
-                        item.expiredIn = expiredIn
-                        item.lastUpdate = dateFormatter.format(Date())
-                        emitter.onNext(item)
+                        emitter.onNext(getItemDataFromHtmlDoc(url,name))
                         emitter.onComplete()
-
-                    } catch (e: NumberFormatException) {
-                        e.fillInStackTrace()
-                        emitter.onError(Throwable(e.message.toString()))
-                    }
                 }
             })
             .subscribeOn(Schedulers.io())
@@ -101,9 +82,35 @@ class AddViewModel : ViewModel(){
                     compositeDisposable.add(d)
                 }
             })
-
-
     }
+
+
+
+    private fun getItemDataFromHtmlDoc(url:String, name:String):Item{
+        val doc = Jsoup.connect(url).get()
+
+        val title: String =
+            if (name.isNotEmpty()) name
+            else
+                doc.selectFirst(allegroInfo.titlePath).text()
+
+        val strPrice: String = doc.selectFirst(allegroInfo.pricePath).text()
+        val imgUrl: String = doc.selectFirst(allegroInfo.imgPath).absUrl("src")
+
+        var expiredIn: String? = ""
+        if (doc.selectFirst(allegroInfo.expiredInPath) != null)
+            expiredIn = doc.selectFirst(allegroInfo.expiredInPath).text()
+        val floatPrice: Float = strPrice.strPriceToFloat()
+        val item = Item(0,title,floatPrice,url)
+        val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
+
+        item.itemImgUrl = imgUrl
+        item.expiredIn = expiredIn
+        item.lastUpdate = dateFormatter.format(Date())
+
+        return item
+    }
+
 
     fun onDestroy(){
         compositeDisposable.clear()

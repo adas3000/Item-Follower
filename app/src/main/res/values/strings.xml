@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Allegro Follower</string>
+    <string name="add_activity_appbar_text">Add Item</string>
     <string name="app_notify_content_text" translatable="false">%s price has changed \n%s</string>
     <string name="app_notify_channel_id_text" translatable="false">pl.allegro.follower:Notification Channel ID</string>
     <string name="app_notify_channel_description_text" translatable="false">Notification Channel which shows items changed</string>
