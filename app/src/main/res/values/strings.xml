@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">Allegro Follower</string>
+    <string name="app_name">Item Follower</string>
     <string name="add_activity_appbar_text">Add Item</string>
-    <string name="app_notify_content_text" translatable="false">%s price has changed \n%s</string>
+    <string name="app_notify_content_text">%s price has changed \n%s\nNew Price:%s</string>
     <string name="app_notify_channel_id_text" translatable="false">pl.allegro.follower:Notification Channel ID</string>
     <string name="app_notify_channel_description_text" translatable="false">Notification Channel which shows items changed</string>
     <string name="app_notify_channel_name_text">pl.allegro.follower:Notifications</string>
     <string name="item_url_text" translatable="false">URL</string>
     <string name="item_name_text">Item Name</string>
     <string name="item_save_text">Save</string>
-    <string name="item_run_in_background_text">Stay in background</string>
+    <string name="item_run_in_background_text">Check items state in background</string>
     <string name="delete_all_items_text">Delete All</string>
     <string name="default_item_title">Title</string>
     <string name="default_item_expired_in">Expired In</string>

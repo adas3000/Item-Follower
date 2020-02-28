@@ -182,7 +182,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
             notificationManager.createNotificationChannel(mNotifyChannel)
         }
 
-        val contentText = context.getString(R.string.app_notify_content_text,item.itemName,item.expiredIn)
+        val contentText = context.getString(R.string.app_notify_content_text,item.itemName,item.expiredIn,item.itemPrice.toString())
 
         val mNotifyBuilder: NotificationCompat.Builder = NotificationCompat
             .Builder(context, context.getString(R.string.app_notify_channel_id_text))

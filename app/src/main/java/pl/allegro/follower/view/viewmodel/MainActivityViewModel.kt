@@ -18,6 +18,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val itemListLiveData: LiveData<List<Item>>
 
     private val itemRepository: ItemRepository = ItemRepository(application)
+    //todo do some androidviewmodel factor to send context instead of app. in itemchangechecker
     private val itemChangeChecker:ItemChangeChecker = ItemChangeChecker(itemRepository,application)
 
     init {
