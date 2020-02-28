@@ -59,7 +59,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
                 }
                 override fun onNext(t: List<Item>) {
                     Log.d(TAG,"On next invoked")
-                    checkItemsHasChanged(t,true)
+                    checkItemsHasChanged(t)
                 }
                 override fun onError(e: Throwable) {
                     e.fillInStackTrace()
@@ -69,42 +69,42 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
     }
 
 
+//    private fun checkItemsHasChanged(allegroItems: List<Item>) {
+//        Observable
+//            .fromIterable(allegroItems)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .filter {
+//                println(Jsoup.connect(it.itemURL).get())
+//                val itemChanged = compareItems(Jsoup.connect(it.itemURL).get(), it)
+//                if (itemChanged) {
+//                    itemRepository.updateItem(it)
+//                }
+//                itemChanged
+//            }
+//            .subscribe(object : Observer<Item> {
+//                override fun onComplete() {
+//                    Log.d(TAG, "On Complete invoked")
+//                }
+//
+//                override fun onSubscribe(d: Disposable) {
+//                    Log.d(TAG,"On Subscribe invoked")
+//                    compositeDisposable.add(d)
+//                }
+//
+//                override fun onNext(t: Item) {
+//                    Log.d(TAG,"On next invoked")
+//                    buildNotification(t)
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                    Log.d(TAG, "On Error invoked ${e.message.toString()}")
+//                }
+//            })
+//    }
+
+
     private fun checkItemsHasChanged(allegroItems: List<Item>) {
-        Observable
-            .fromIterable(allegroItems)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter {
-                println(Jsoup.connect(it.itemURL).get())
-                val itemChanged = compareItems(Jsoup.connect(it.itemURL).get(), it)
-                if (itemChanged) {
-                    itemRepository.updateItem(it)
-                }
-                itemChanged
-            }
-            .subscribe(object : Observer<Item> {
-                override fun onComplete() {
-                    Log.d(TAG, "On Complete invoked")
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                    Log.d(TAG,"On Subscribe invoked")
-                    compositeDisposable.add(d)
-                }
-
-                override fun onNext(t: Item) {
-                    Log.d(TAG,"On next invoked")
-                    buildNotification(t)
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.d(TAG, "On Error invoked ${e.message.toString()}")
-                }
-            })
-    }
-
-
-    private fun checkItemsHasChanged(allegroItems: List<Item>,useThisOne:Boolean) {
         Observable
             .create(ObservableOnSubscribe<Item>{
                 if(!it.isDisposed){
@@ -131,6 +131,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
                 }
 
                 override fun onNext(t: Item) {
+                    buildNotification(t)
                     Log.d(TAG,"On next invoked")
                 }
 
