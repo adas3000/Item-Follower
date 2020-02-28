@@ -12,7 +12,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
-import pl.allegro.follower.DI.service.AllegroService
+import pl.allegro.follower.DI.AllegroInfo
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.util.textToFloat
 import pl.allegro.follower.view.ui.AddItemActivity.Companion.TAG
@@ -31,7 +31,7 @@ class AddViewModel : ViewModel(){
     private val compositeDisposable = CompositeDisposable()
 
     @Inject
-    lateinit var allegroService: AllegroService
+    lateinit var allegroInfo: AllegroInfo
 
     init {
         DaggerItemPropertiesComponent.builder().build().inject(this)
@@ -56,14 +56,14 @@ class AddViewModel : ViewModel(){
                     val title: String =
                         if (name.isNotEmpty()) name
                         else
-                            doc.selectFirst(allegroService.titlePath).text()
+                            doc.selectFirst(allegroInfo.titlePath).text()
 
-                    val strPrice: String = doc.selectFirst(allegroService.pricePath).text()
-                    val imgUrl: String = doc.selectFirst(allegroService.imgPath).absUrl("src")
+                    val strPrice: String = doc.selectFirst(allegroInfo.pricePath).text()
+                    val imgUrl: String = doc.selectFirst(allegroInfo.imgPath).absUrl("src")
 
                     var expiredIn: String? = ""
-                    if (doc.selectFirst(allegroService.expiredInPath) != null)
-                        expiredIn = doc.selectFirst(allegroService.expiredInPath).text()
+                    if (doc.selectFirst(allegroInfo.expiredInPath) != null)
+                        expiredIn = doc.selectFirst(allegroInfo.expiredInPath).text()
 
                     try {
                         val floatPrice: Float = textToFloat(strPrice)

@@ -18,13 +18,11 @@ import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
-import pl.allegro.follower.DI.service.AllegroService
+import pl.allegro.follower.DI.AllegroInfo
 import pl.allegro.follower.R
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.model.repository.ItemRepository
-import pl.allegro.follower.util.service.ItemStateService
 import pl.allegro.follower.util.textToFloat
-import pl.allegro.follower.view.viewmodel.MainActivityViewModel
 import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,7 +32,7 @@ import javax.inject.Inject
 class ItemChangeChecker(private val itemRepository: ItemRepository,private val context: Context) {
 
     @Inject
-    lateinit var allegroService: AllegroService
+    lateinit var allegroInfo: AllegroInfo
     private val compositeDisposable = CompositeDisposable()
 
     companion object{
@@ -105,12 +103,12 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
         val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
 
 
-        val docPrice: String = document.selectFirst(allegroService.pricePath).text()
+        val docPrice: String = document.selectFirst(allegroInfo.pricePath).text()
 
         var expiredIn: String? = ""
 
-        if (document.selectFirst(allegroService.expiredInPath) != null)
-            expiredIn = document.selectFirst(allegroService.expiredInPath).text()
+        if (document.selectFirst(allegroInfo.expiredInPath) != null)
+            expiredIn = document.selectFirst(allegroInfo.expiredInPath).text()
 
         return try {
             val floatPrice: Float = textToFloat(docPrice)

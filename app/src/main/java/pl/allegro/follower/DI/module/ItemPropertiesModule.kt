@@ -2,7 +2,7 @@ package pl.allegro.follower.DI.module
 
 import dagger.Module
 import dagger.Provides
-import pl.allegro.follower.DI.service.AllegroService
+import pl.allegro.follower.DI.AllegroInfo
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -44,8 +44,13 @@ class ItemPropertiesModule {
     }
 
     @Provides
-    fun provideAllegroService():AllegroService{
-        return AllegroService(titlePath,pricePath,imgPath,expiredInPath)
+    fun provideAllegroService(): AllegroInfo {
+        return AllegroInfo(
+            titlePath,
+            pricePath,
+            imgPath,
+            expiredInPath
+        )
     }
 
 }

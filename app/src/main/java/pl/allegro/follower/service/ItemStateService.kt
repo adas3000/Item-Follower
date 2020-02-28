@@ -1,4 +1,4 @@
-package pl.allegro.follower.util.service
+package pl.allegro.follower.service
 
 import android.app.Service
 import android.content.Intent

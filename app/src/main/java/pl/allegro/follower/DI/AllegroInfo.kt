@@ -1,8 +1,8 @@
-package pl.allegro.follower.DI.service
+package pl.allegro.follower.DI
 
 import javax.inject.Inject
 
-class AllegroService @Inject constructor(
+class AllegroInfo @Inject constructor(
     val titlePath: String,
     val pricePath: String,
     val imgPath: String,

@@ -13,22 +13,28 @@ import com.bumptech.glide.request.RequestOptions
 import pl.allegro.follower.R
 import pl.allegro.follower.model.data.Item
 
-class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
-    private var itemList:List<Item> = ArrayList()
+    private var itemList: List<Item> = ArrayList()
 
-    fun setItems(items:List<Item>){
+    fun setItems(items: List<Item>) {
         itemList = items
         notifyDataSetChanged()
     }
 
-    fun getItemAtPosition(i:Int):Item{
+    fun getItemAtPosition(i: Int): Item {
         return itemList[i]
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_layout,parent,false))
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.item_layout,
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int = itemList.size
@@ -45,7 +51,6 @@ class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
         Glide.with(holder.img.context)
             .load(itemLogoURL)
-//            .apply(RequestOptions.circleCropTransform())
             .into(holder.img)
 
         holder.img.setOnClickListener {
@@ -53,24 +58,23 @@ class ItemAdapter:RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
         }
 
         holder.itemName.text = itemName
-        holder.itemPrice.text = holder.itemPrice.context.getString(R.string.price_in_pln_text,itemPrice.toString())
-        holder.itemLastUpdate.text =itemLastUpdate
+        holder.itemPrice.text = holder.itemPrice.context.getString(R.string.price_in_pln_text, itemPrice.toString())
+        holder.itemLastUpdate.text = itemLastUpdate
 
-        if(itemExpiredIn != null && !TextUtils.isEmpty(itemExpiredIn)){
+        if (itemExpiredIn != null && !TextUtils.isEmpty(itemExpiredIn)) {
             holder.itemExpiredIn.visibility = View.VISIBLE
             holder.itemExpiredIn.text = itemExpiredIn
-            println(itemExpiredIn)
         }
 
     }
 
-    class ViewHolder(view:View) : RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val img = view.findViewById<ImageView>(R.id.imageView_logo)
-        val itemName = view.findViewById<TextView>(R.id.textView_item_name)
-        val itemPrice = view.findViewById<TextView>(R.id.textView_item_price)
-        val itemExpiredIn = view.findViewById<TextView>(R.id.textView_item_expired_in)
-        val itemLastUpdate = view.findViewById<TextView>(R.id.textView_item_last_update_time)
+        val img: ImageView = view.findViewById(R.id.imageView_logo)
+        val itemName: TextView = view.findViewById(R.id.textView_item_name)
+        val itemPrice: TextView = view.findViewById(R.id.textView_item_price)
+        val itemExpiredIn: TextView = view.findViewById(R.id.textView_item_expired_in)
+        val itemLastUpdate: TextView = view.findViewById(R.id.textView_item_last_update_time)
 
     }
 

@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pl.allegro.follower.R
 import pl.allegro.follower.model.adapter.ItemAdapter
 import pl.allegro.follower.model.data.Item
-import pl.allegro.follower.util.service.ItemStateService
+import pl.allegro.follower.service.ItemStateService
 import pl.allegro.follower.view.viewmodel.MainActivityViewModel
 
 
