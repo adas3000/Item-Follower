@@ -1,9 +1,15 @@
 package pl.allegro.follower.util.service
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,6 +20,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.DI.service.AllegroService
+import pl.allegro.follower.R
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.model.repository.ItemRepository
 import pl.allegro.follower.util.textToFloat
@@ -64,7 +71,7 @@ class ItemStateService : Service() {
                 }
             })
 
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
 
 
@@ -72,7 +79,7 @@ class ItemStateService : Service() {
         return null
     }
 
-    fun checkItemsHasChanged(allegroItems: List<Item>) {
+    private fun checkItemsHasChanged(allegroItems: List<Item>) {
         Observable
             .fromIterable(allegroItems)
             .subscribeOn(Schedulers.io())
@@ -95,6 +102,7 @@ class ItemStateService : Service() {
                 }
 
                 override fun onNext(t: Item) {
+
                     //todo notify user
                 }
 
@@ -131,6 +139,27 @@ class ItemStateService : Service() {
             e.fillInStackTrace()
             false
         }
+    }
+
+    private fun buildNotifcation(item:Item){
+
+        val notificationManager:NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            val mNotifyChannel = NotificationChannel("","",NotificationManager.IMPORTANCE_DEFAULT)
+            mNotifyChannel.description = ""
+            notificationManager.createNotificationChannel(mNotifyChannel)
+        }
+
+        val mNotifyBuilder = NotificationCompat.Builder(this, "")
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText("")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        val intent:Intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(item.itemURL)
+        startActivity(intent)
     }
 
     override fun onDestroy() {
