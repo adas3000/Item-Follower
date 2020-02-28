@@ -1,14 +1,12 @@
-package pl.allegro.follower.util.service
+package pl.allegro.follower.model
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import io.reactivex.Observable
@@ -22,9 +20,9 @@ import org.jsoup.nodes.Document
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.DI.service.AllegroService
 import pl.allegro.follower.R
-import pl.allegro.follower.model.ItemChangeChecker
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.model.repository.ItemRepository
+import pl.allegro.follower.util.service.ItemStateService
 import pl.allegro.follower.util.textToFloat
 import pl.allegro.follower.view.viewmodel.MainActivityViewModel
 import java.lang.NumberFormatException
@@ -33,35 +31,38 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ItemStateService : Service() {
-
-    companion object{
-        const val TAG="ItemStateService"
-    }
+class ItemChangeChecker(val itemRepository: ItemRepository, val context: Context) {
 
     @Inject
-    lateinit var allegroService:AllegroService
-
-    private lateinit var itemRepository: ItemRepository
-
+    lateinit var allegroService: AllegroService
     private val compositeDisposable = CompositeDisposable()
 
     init {
         DaggerItemPropertiesComponent.builder().build().inject(this)
     }
 
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        ItemChangeChecker(ItemRepository(application),this).findItems()
-
-        return START_NOT_STICKY
+    fun findItems(){
+        itemRepository
+            .getObservableAllItems()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object:Observer<List<Item>>{
+                override fun onComplete() {
+                    Log.d(ItemStateService.TAG,"On complete invoked")
+                }
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+                override fun onNext(t: List<Item>) {
+                    checkItemsHasChanged(t)
+                }
+                override fun onError(e: Throwable) {
+                    e.fillInStackTrace()
+                    Log.d(ItemStateService.TAG,"On error invoked ${e.message.toString()}")
+                }
+            })
     }
 
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
 
     private fun checkItemsHasChanged(allegroItems: List<Item>) {
         Observable
@@ -86,7 +87,7 @@ class ItemStateService : Service() {
                 }
 
                 override fun onNext(t: Item) {
-                    //todo notify user
+                    buildNotification(t)
                 }
 
                 override fun onError(e: Throwable) {
@@ -124,34 +125,34 @@ class ItemStateService : Service() {
         }
     }
 
-    private fun buildNotifcation(item:Item){
+    private fun buildNotification(item: Item){
 
-        val notificationManager:NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val mNotifyChannel = NotificationChannel(getString(R.string.app_notify_channel_id_text),
-                getString(R.string.app_notify_channel_name_text),
+            val mNotifyChannel = NotificationChannel(context.getString(R.string.app_notify_channel_id_text),
+                context.getString(R.string.app_notify_channel_name_text),
                 NotificationManager.IMPORTANCE_DEFAULT)
-            mNotifyChannel.description = getString(R.string.app_notify_channel_description_text)
+            mNotifyChannel.description = context.getString(R.string.app_notify_channel_description_text)
             notificationManager.createNotificationChannel(mNotifyChannel)
         }
 
-        val mNotifyBuilder:NotificationCompat.Builder = NotificationCompat
-            .Builder(this, getString(R.string.app_notify_channel_id_text))
+        val mNotifyBuilder: NotificationCompat.Builder = NotificationCompat
+            .Builder(context, context.getString(R.string.app_notify_channel_id_text))
             .setSmallIcon(R.drawable.ic_launcher_background)
-            .setContentTitle(getString(R.string.app_name))
-            .setContentText(getString(R.string.app_notify_content_text,item.itemName,item.expiredIn))
+            .setContentTitle(context.getString(R.string.app_name))
+            .setContentText(context.getString(R.string.app_notify_content_text,item.itemName,item.expiredIn))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(item.itemURL)
-        val pendingIntent:PendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(context,
+            0,intent, PendingIntent.FLAG_UPDATE_CURRENT)
         mNotifyBuilder.setContentIntent(pendingIntent)
         notificationManager.notify(item.uid,mNotifyBuilder.build())
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    fun doDispose(){
         compositeDisposable.clear()
     }
 

@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import dagger.Module
 import dagger.Provides
+import pl.allegro.follower.R
 import pl.allegro.follower.model.dao.ItemDao
 import pl.allegro.follower.model.db.ItemDatabase
 import javax.inject.Singleton
@@ -33,5 +34,7 @@ class AppModule(val context: Context) {
     fun provideItemsDao():ItemDao{
         return databaseInstance.itemDao()
     }
+
+
 
 }
