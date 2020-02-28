@@ -10,6 +10,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -53,10 +54,12 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
                     Log.d(TAG,"On complete invoked")
                 }
                 override fun onSubscribe(d: Disposable) {
+                    Log.d(TAG,"On subscribe invoked")
                     compositeDisposable.add(d)
                 }
                 override fun onNext(t: List<Item>) {
-                    checkItemsHasChanged(t)
+                    Log.d(TAG,"On next invoked")
+                    checkItemsHasChanged(t,true)
                 }
                 override fun onError(e: Throwable) {
                     e.fillInStackTrace()
@@ -72,36 +75,74 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .filter {
-                val itemChanged = compareItems(Jsoup.connect(it.itemURL.toString()).get(), it)
+                println(Jsoup.connect(it.itemURL).get())
+                val itemChanged = compareItems(Jsoup.connect(it.itemURL).get(), it)
                 if (itemChanged) {
                     itemRepository.updateItem(it)
                 }
                 itemChanged
             }
-            .delay(1, TimeUnit.SECONDS)
             .subscribe(object : Observer<Item> {
                 override fun onComplete() {
                     Log.d(TAG, "On Complete invoked")
                 }
 
                 override fun onSubscribe(d: Disposable) {
+                    Log.d(TAG,"On Subscribe invoked")
                     compositeDisposable.add(d)
                 }
 
                 override fun onNext(t: Item) {
+                    Log.d(TAG,"On next invoked")
                     buildNotification(t)
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.d(TAG, e.message.toString())
+                    Log.d(TAG, "On Error invoked ${e.message.toString()}")
                 }
             })
     }
 
+
+    private fun checkItemsHasChanged(allegroItems: List<Item>,useThisOne:Boolean) {
+        Observable
+            .create(ObservableOnSubscribe<Item>{
+                if(!it.isDisposed){
+                    for(i in allegroItems){
+                        val itemChanged = compareItems(Jsoup.connect(i.itemURL).get(), i)
+                        if (itemChanged) {
+                            itemRepository.updateItem(i)
+                            it.onNext(i)
+                        }
+                    }
+                    it.onComplete()
+                }
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object:Observer<Item>{
+                override fun onComplete() {
+                    Log.d(TAG, "On Complete invoked")
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    Log.d(TAG,"On Subscribe invoked")
+                    compositeDisposable.add(d)
+                }
+
+                override fun onNext(t: Item) {
+                    Log.d(TAG,"On next invoked")
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.d(TAG, "On Error invoked ${e.message.toString()}")
+                }
+            })
+    }
+
+
     private fun compareItems(document: Document, item: Item): Boolean {
-
         val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
-
 
         val docPrice: String = document.selectFirst(allegroInfo.pricePath).text()
 
@@ -122,6 +163,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
             } else false
 
         } catch (e: NumberFormatException) {
+            Log.d(TAG,"Error inside try-catch:${e.message.toString()}")
             e.fillInStackTrace()
             false
         }

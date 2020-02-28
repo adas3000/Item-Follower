@@ -67,7 +67,7 @@ class AddViewModel : ViewModel(){
 
                     try {
                         val floatPrice: Float = strPrice.strPriceToFloat()
-                        val item = Item(0,title,floatPrice,doc.location())
+                        val item = Item(0,title,floatPrice,url)
                         val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
 
                         item.itemImgUrl = imgUrl

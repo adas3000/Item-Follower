@@ -1,17 +1,17 @@
 package pl.allegro.follower.model.adapter
 
 import android.annotation.SuppressLint
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import pl.allegro.follower.R
 import pl.allegro.follower.model.data.Item
+import pl.allegro.follower.util.loadImageFromUrl
+import pl.allegro.follower.util.setExpiredIn
+import pl.allegro.follower.util.onClickRedirectToUrl
 
 class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
@@ -49,14 +49,8 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
         val itemLastUpdate = itemList[position].lastUpdate
         val itemLogoURL = itemList[position].itemImgUrl
 
-        Glide.with(holder.img.context)
-            .load(itemLogoURL)
-            .into(holder.img)
-
-        holder.img.setOnClickListener {
-            //to url
-        }
-
+        holder.img.loadImageFromUrl(itemLogoURL)
+        holder.img.setOnClickListener { holder.img.onClickRedirectToUrl(itemList[position].itemURL) }
         holder.itemName.text = itemName
         holder.itemPrice.text = holder.itemPrice.context.getString(R.string.price_in_pln_text, itemPrice.toString())
         holder.itemLastUpdate.text = itemLastUpdate
@@ -75,11 +69,3 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
     }
 }
 
-fun TextView.setExpiredIn(expiredIn:String?){
-
-    if(expiredIn != null && !TextUtils.isEmpty(expiredIn)){
-        this.visibility = View.VISIBLE
-        this.text = expiredIn
-    }
-
-}
