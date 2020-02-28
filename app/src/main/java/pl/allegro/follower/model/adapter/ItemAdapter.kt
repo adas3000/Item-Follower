@@ -60,11 +60,7 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
         holder.itemName.text = itemName
         holder.itemPrice.text = holder.itemPrice.context.getString(R.string.price_in_pln_text, itemPrice.toString())
         holder.itemLastUpdate.text = itemLastUpdate
-
-        if (itemExpiredIn != null && !TextUtils.isEmpty(itemExpiredIn)) {
-            holder.itemExpiredIn.visibility = View.VISIBLE
-            holder.itemExpiredIn.text = itemExpiredIn
-        }
+        holder.itemExpiredIn.setExpiredIn(itemExpiredIn)
 
     }
 
@@ -76,6 +72,14 @@ class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
         val itemExpiredIn: TextView = view.findViewById(R.id.textView_item_expired_in)
         val itemLastUpdate: TextView = view.findViewById(R.id.textView_item_last_update_time)
 
+    }
+}
+
+fun TextView.setExpiredIn(expiredIn:String?){
+
+    if(expiredIn != null && !TextUtils.isEmpty(expiredIn)){
+        this.visibility = View.VISIBLE
+        this.text = expiredIn
     }
 
 }

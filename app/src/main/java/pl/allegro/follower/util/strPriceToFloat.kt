@@ -1,6 +1,5 @@
 package pl.allegro.follower.util
 
-
 fun String.strPriceToFloat():Float{
     var newStr :String= this.replace(" ","")
     newStr = newStr.replace(",",".")
