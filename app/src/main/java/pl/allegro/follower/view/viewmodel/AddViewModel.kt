@@ -14,7 +14,7 @@ import org.jsoup.Jsoup
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.DI.AllegroInfo
 import pl.allegro.follower.model.data.Item
-import pl.allegro.follower.util.textToFloat
+import pl.allegro.follower.util.strPriceToFloat
 import pl.allegro.follower.view.ui.AddItemActivity.Companion.TAG
 import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
@@ -66,7 +66,7 @@ class AddViewModel : ViewModel(){
                         expiredIn = doc.selectFirst(allegroInfo.expiredInPath).text()
 
                     try {
-                        val floatPrice: Float = textToFloat(strPrice)
+                        val floatPrice: Float = strPrice.strPriceToFloat()
                         val item = Item(0,title,floatPrice,doc.location())
                         val dateFormatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
 

@@ -22,7 +22,7 @@ import pl.allegro.follower.DI.AllegroInfo
 import pl.allegro.follower.R
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.model.repository.ItemRepository
-import pl.allegro.follower.util.textToFloat
+import pl.allegro.follower.util.strPriceToFloat
 import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -111,7 +111,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
             expiredIn = document.selectFirst(allegroInfo.expiredInPath).text()
 
         return try {
-            val floatPrice: Float = textToFloat(docPrice)
+            val floatPrice: Float = docPrice.strPriceToFloat()
 
             item.expiredIn = expiredIn
             item.lastUpdate = dateFormatter.format(Date())
