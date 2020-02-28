@@ -31,7 +31,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ItemChangeChecker(val itemRepository: ItemRepository, val context: Context) {
+class ItemChangeChecker(private val itemRepository: ItemRepository,private val context: Context) {
 
     @Inject
     lateinit var allegroService: AllegroService
@@ -152,7 +152,7 @@ class ItemChangeChecker(val itemRepository: ItemRepository, val context: Context
         notificationManager.notify(item.uid,mNotifyBuilder.build())
     }
 
-    fun doDispose(){
+    fun clear(){
         compositeDisposable.clear()
     }
 

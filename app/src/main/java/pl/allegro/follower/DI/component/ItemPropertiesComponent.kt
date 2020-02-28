@@ -11,6 +11,5 @@ import javax.inject.Singleton
 @Singleton
 interface ItemPropertiesComponent {
     fun inject(addViewModel: AddViewModel)
-    fun inject(service: ItemStateService)
     fun inject(itemChangeChecker: ItemChangeChecker)
 }

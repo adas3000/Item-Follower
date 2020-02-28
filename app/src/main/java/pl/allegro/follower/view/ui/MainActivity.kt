@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         const val ADD_REQ = 7
     }
 
-
     private lateinit var itemViewModel: MainActivityViewModel
     private val adapter = ItemAdapter()
 
@@ -77,6 +76,7 @@ class MainActivity : AppCompatActivity() {
 
         pullToRefresh.setOnRefreshListener {
             Handler().postDelayed({
+                itemViewModel.refreshItemsState()
                 pullToRefresh.isRefreshing=false
             },1000)
         }

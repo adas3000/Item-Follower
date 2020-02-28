@@ -18,6 +18,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pl.allegro.follower.DI.component.DaggerItemPropertiesComponent
 import pl.allegro.follower.DI.service.AllegroService
+import pl.allegro.follower.model.ItemChangeChecker
 import pl.allegro.follower.model.data.Item
 import pl.allegro.follower.model.repository.ItemRepository
 import pl.allegro.follower.util.textToFloat
@@ -37,6 +38,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val itemListLiveData: LiveData<List<Item>>
 
     private val itemRepository: ItemRepository = ItemRepository(application)
+    private val itemChangeChecker:ItemChangeChecker = ItemChangeChecker(itemRepository,application)
 
     init {
         itemListLiveData = itemRepository.getAllItems()
@@ -67,6 +69,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         editor.apply()
     }
 
+    fun refreshItemsState(){
+        itemChangeChecker.findItems()
+    }
 
+    fun clear(){
+        itemChangeChecker.clear()
+    }
 
 }
