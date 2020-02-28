@@ -150,5 +150,9 @@ class MainActivity : AppCompatActivity() {
         alarmManager.cancel(itemStateServicePendingIntent)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        itemViewModel.clear()
+    }
 
 }

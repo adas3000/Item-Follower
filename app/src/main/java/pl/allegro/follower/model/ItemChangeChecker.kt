@@ -37,6 +37,10 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
     lateinit var allegroService: AllegroService
     private val compositeDisposable = CompositeDisposable()
 
+    companion object{
+        const val TAG="ItemChangeChecker"
+    }
+
     init {
         DaggerItemPropertiesComponent.builder().build().inject(this)
     }
@@ -48,7 +52,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object:Observer<List<Item>>{
                 override fun onComplete() {
-                    Log.d(ItemStateService.TAG,"On complete invoked")
+                    Log.d(TAG,"On complete invoked")
                 }
                 override fun onSubscribe(d: Disposable) {
                     compositeDisposable.add(d)
@@ -58,7 +62,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
                 }
                 override fun onError(e: Throwable) {
                     e.fillInStackTrace()
-                    Log.d(ItemStateService.TAG,"On error invoked ${e.message.toString()}")
+                    Log.d(TAG,"On error invoked ${e.message.toString()}")
                 }
             })
     }
@@ -79,7 +83,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
             .delay(1, TimeUnit.SECONDS)
             .subscribe(object : Observer<Item> {
                 override fun onComplete() {
-                    Log.d(MainActivityViewModel.TAG, "On Complete invoked")
+                    Log.d(TAG, "On Complete invoked")
                 }
 
                 override fun onSubscribe(d: Disposable) {
@@ -91,7 +95,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.d(MainActivityViewModel.TAG, e.message.toString())
+                    Log.d(TAG, e.message.toString())
                 }
             })
     }
@@ -137,11 +141,14 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
             notificationManager.createNotificationChannel(mNotifyChannel)
         }
 
+        val contentText = context.getString(R.string.app_notify_content_text,item.itemName,item.expiredIn)
+
         val mNotifyBuilder: NotificationCompat.Builder = NotificationCompat
             .Builder(context, context.getString(R.string.app_notify_channel_id_text))
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setContentTitle(context.getString(R.string.app_name))
-            .setContentText(context.getString(R.string.app_notify_content_text,item.itemName,item.expiredIn))
+            .setContentText(contentText)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         val intent = Intent(Intent.ACTION_VIEW)
