@@ -61,6 +61,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
                     Log.d(TAG,"On next invoked")
                     checkItemsHasChanged(t)
                 }
+
                 override fun onError(e: Throwable) {
                     e.fillInStackTrace()
                     Log.d(TAG,"On error invoked ${e.message.toString()}")
@@ -182,7 +183,7 @@ class ItemChangeChecker(private val itemRepository: ItemRepository,private val c
             notificationManager.createNotificationChannel(mNotifyChannel)
         }
 
-        val contentText = context.getString(R.string.app_notify_content_text,item.itemName,item.expiredIn,item.itemPrice.toString())
+        val contentText = context.getString(R.string.app_notify_content_text,item.itemName,item.expiredIn,context.getString(R.string.price_in_pln_text,item.itemPrice.toString()))
 
         val mNotifyBuilder: NotificationCompat.Builder = NotificationCompat
             .Builder(context, context.getString(R.string.app_notify_channel_id_text))
